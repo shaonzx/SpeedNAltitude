@@ -1,6 +1,8 @@
 package com.shaon.speednaltitude;
 
 
+import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 
 import android.app.Notification;
@@ -16,9 +18,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -54,7 +58,7 @@ public class GpsServices extends Service {
 		
 		
 		
-		Toast.makeText(this, "The Service has been Started!", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Tracking has been Started!", Toast.LENGTH_SHORT).show();
 		
 	    locationManager = (LocationManager) getApplicationContext()
 	            .getSystemService(Context.LOCATION_SERVICE);
@@ -69,26 +73,35 @@ public class GpsServices extends Service {
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		
-		Toast.makeText(this, "Service Stopped!", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Tracking Stopped!", Toast.LENGTH_SHORT).show();
 		locationManager.removeUpdates(listener);
 		locationManager = null;
 	}
 	
 	private void showSpeedAndAltitude(double speed, double altitude) {
 		// TODO Auto-generated method stub
-		//Toast.makeText(this, speed + " meters/s | " + altitude + " m", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, speed + " meters/s | " + altitude + " m", Toast.LENGTH_SHORT).show();
 		
-		Intent intent = new Intent(this, Dashboard.class);
-		PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+				
 		
-		Notification n = new Notification.Builder(this)
-				.setContentTitle(speed + " meters/s | " + altitude + " m")				
-				.setContentIntent(pIntent).setAutoCancel(true)
-				.addAction(R.drawable.ic_launcher, "Call", pIntent)
-				.addAction(R.drawable.ic_launcher, "More", pIntent)
-				.addAction(R.drawable.ic_launcher, "And more", pIntent).build();
+		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		
+		Notification n = new NotificationCompat.Builder(this)
+		.setContentTitle(speed + " meters/s | " + altitude + " m")				
+		.setSmallIcon(R.drawable.ic_launcher)				
+		.setAutoCancel(true).build();
 		
 		notificationManager.notify(0,n);
+
+		
+		/*Notification n = new Notification.Builder(this)
+				.setContentTitle(speed + " meters/s | " + altitude + " m")
+				.setContentTitle("It's a Notification")				
+				.setSmallIcon(R.drawable.ic_launcher)				
+				.setAutoCancel(true).build();	
+		notificationManager.notify(0,n);*/
+		
+		
 	}
 	
 	
